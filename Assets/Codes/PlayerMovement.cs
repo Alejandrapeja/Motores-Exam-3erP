@@ -8,6 +8,35 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 6f;
     public float turnSmoothTime = 0.1f;
     float turnSmoothVel;
+    void Start()
+    {
+
+        setColliderState(false);
+        GetComponent<Animator>().enabled = true;
+    }
+    public void die()
+    {
+
+        GetComponent<Animator>().enabled = false;
+
+        setColliderState(true);
+    }
+
+    void setColliderState(bool state)
+    {
+
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = state;
+        }
+
+        GetComponent<Collider>().enabled = !state;
+
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -23,5 +52,10 @@ public class PlayerMovement : MonoBehaviour
 
             controller.Move(direction * speed * Time.deltaTime);
         }
+        if (Input.GetButtonDown("Jump"))
+        {
+            die();
+        }
+
     }
 }
