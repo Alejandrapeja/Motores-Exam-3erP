@@ -2650,6 +2650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 641715780}
+  menu: {fileID: 1001638234}
 --- !u!1001 &4489280610860485259
 PrefabInstance:
   m_ObjectHideFlags: 0

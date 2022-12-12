@@ -1,20 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class settingsmanager : MonoBehaviour
 {
     public GameObject settings;
+    public GameObject menu;
 
     public void CloseSettings()
     {
-        GameObject.Find("Menu").SetActive(true);
-        settings.SetActive(false);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        Scene ascene = SceneManager.GetActiveScene();
+        if(ascene.name == "Menu")
+        {
+            menu.SetActive(true);
+            settings.SetActive(false);
+        }
+        else
+        {
+            settings.SetActive(false);
+        }
     }
 
     // Update is called once per frame
