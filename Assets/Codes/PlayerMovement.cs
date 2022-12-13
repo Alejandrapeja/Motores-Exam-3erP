@@ -8,11 +8,13 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 6f;
     public float turnSmoothTime = 0.1f;
     float turnSmoothVel;
+
+    Animator anim;
     void Start()
     {
-
         setColliderState(false);
         GetComponent<Animator>().enabled = true;
+        anim = GetComponent<Animator>();
     }
     public void die()
     {
@@ -43,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
+        bool moving = false;
         if (direction.magnitude >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
@@ -51,10 +53,20 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             controller.Move(direction * speed * Time.deltaTime);
+            moving = true;
         }
         if (Input.GetButtonDown("Jump"))
         {
             die();
+        }
+        bool isWalking = anim.GetBool("iswalking");
+        if (moving)
+        {
+            anim.SetBool("iswalking", true);
+        }
+        if (isWalking && !moving)
+        {
+            anim.SetBool("iswalking", false);
         }
 
     }
