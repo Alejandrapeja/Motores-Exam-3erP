@@ -53,6 +53,11 @@ public class Player : MonoBehaviour
                 wingame();
             }
 
+            /*function OnTriggerEnter(other : Collider)
+            {
+                if(other.GameObject.tag == "controlador")
+                Destroy(GameObject);
+            }*/
         }
      
     }
@@ -99,5 +104,6 @@ public class Player : MonoBehaviour
         PlayerPrefs.SetFloat("tiempoSave", tiempoTotal);
         PlayerPrefs.SetString("usuario", usuariocuadro.text);
     }
-    
+
+ 
 }
