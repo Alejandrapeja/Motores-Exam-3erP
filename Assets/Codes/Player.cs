@@ -13,18 +13,22 @@ public class Player : MonoBehaviour
     public float tiempo;
     public int objetos;
     public float tiempoTotal;
+    public bool tocado;
 
     [SerializeField] private GameObject playerpos;
-    [SerializeField] private GameObject lostgame;
+    public GameObject lostgame;
     [SerializeField] private TMP_InputField usuariocuadro;
-    [SerializeField] private GameObject victoria;
+    public GameObject victoria;
 
     // Start is called before the first frame update
     void Start()
     {
+        posx = playerpos.transform.position.x;
+        posz = playerpos.transform.position.z;
         objetos = 0;
         tiempo = 0;
         lives = 3;
+        tocado = false;
         setLastPos();
     }
 
@@ -34,6 +38,26 @@ public class Player : MonoBehaviour
         tiempo = tiempo + Time.deltaTime;
         posx = playerpos.transform.position.x;
         posz = playerpos.transform.position.z;
+
+
+
+
+        
+            if (lives == 2)
+            {
+                vida3.SetActive(false);
+            }
+            if (lives == 1)
+            {
+                vida2.SetActive(false);
+            }
+            if (lives <= 0)
+            {
+                lostgame.SetActive(true);
+
+            }
+
+        
     }
 
 
@@ -41,8 +65,11 @@ public class Player : MonoBehaviour
     {
        if(other.tag == "trap")
        {
-            Hit();
-            loadLastPos();
+            if (tocado == false) {
+               Hit();
+                loadLastPos();
+            }
+            tocado = true;
         }
        else if (other.tag == "control")
         {
@@ -52,37 +79,16 @@ public class Player : MonoBehaviour
             {
                 wingame();
             }
-
-            /*function OnTriggerEnter(other : Collider)
-            {
-                if(other.GameObject.tag == "controlador")
-                Destroy(GameObject);
-            }*/
+            Destroy(other.gameObject);
+       
         }
      
     }
         
     public void Hit()
     {
-        lives = lives - 1;
-
-        if(lives <= 0)
-        {
-            lostgame.SetActive(true);
-            
-        } 
-        else
-        {
-  
-            if (lives == 2)
-            {
-                vida3.SetActive(false);
-            }
-            if (lives == 1)
-            {
-                vida2.SetActive(false);
-            }
-        }
+        lives--;
+       
     }
     public void setLastPos()
     {
@@ -91,7 +97,10 @@ public class Player : MonoBehaviour
     }
     public void loadLastPos()
     {
-        playerpos.transform.position = new Vector3(posx, 0, posz);
+        float x = PlayerPrefs.GetFloat("posxSave");
+        float z = PlayerPrefs.GetFloat("poszSave");
+        playerpos.transform.localPosition = new Vector3(x, 1f, z);
+        tocado = false;
     }
     public void wingame()
     {
