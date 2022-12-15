@@ -6,6 +6,7 @@ TagManager:
   tags:
   - trap
   - options
+  - control
   layers:
   - Default
   - TransparentFX
