@@ -9,34 +9,17 @@ public class PlayerMovement : MonoBehaviour
     public float turnSmoothTime = 0.1f;
     float turnSmoothVel;
 
-    Animator anim;
+    [SerializeField] private Transform target;
+    private Animator anim;
+    [Range(0, 1)]
+    [SerializeField] private float weight;
+
     void Start()
     {
-        setColliderState(false);
         GetComponent<Animator>().enabled = true;
         anim = GetComponent<Animator>();
     }
-    public void die()
-    {
 
-        GetComponent<Animator>().enabled = false;
-
-        setColliderState(true);
-    }
-
-    void setColliderState(bool state)
-    {
-
-        Collider[] colliders = GetComponentsInChildren<Collider>();
-
-        foreach (Collider collider in colliders)
-        {
-            collider.enabled = state;
-        }
-
-        GetComponent<Collider>().enabled = !state;
-
-    }
 
 
     // Update is called once per frame
@@ -55,10 +38,6 @@ public class PlayerMovement : MonoBehaviour
             controller.Move(direction * speed * Time.deltaTime);
             moving = true;
         }
-        if (Input.GetButtonDown("Jump"))
-        {
-            die();
-        }
         bool isWalking = anim.GetBool("iswalking");
         if (moving)
         {
@@ -69,5 +48,10 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("iswalking", false);
         }
 
+    }
+    private void OnAnimatorIK(int layerIndex)
+    {
+        anim.SetIKPosition(AvatarIKGoal.LeftHand, target.position);
+        anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, weight);
     }
 }

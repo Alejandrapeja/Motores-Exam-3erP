@@ -15,49 +15,46 @@ public class Player : MonoBehaviour
     public float tiempoTotal;
     public bool tocado;
 
-    [SerializeField] private GameObject playerpos;
+    public float timerRag;
+    private bool actTimer;
+    private Animator anim;
+
+
+    public GameObject playerpos;
     public GameObject lostgame;
     [SerializeField] private TMP_InputField usuariocuadro;
     public GameObject victoria;
 
-    // Start is called before the first frame update
+    //public CharacterController controller;
+
     void Start()
     {
-        posx = playerpos.transform.position.x;
-        posz = playerpos.transform.position.z;
+        setColliderState(false); //ragdool
+        GetComponent<Animator>().enabled = true;
+        anim = GetComponent<Animator>();
+
         objetos = 0;
         tiempo = 0;
         lives = 3;
         tocado = false;
         setLastPos();
+        actTimer= false;
+        timerRag = 5f;
+        timerwin = 5f;
     }
-
-    // Update is called once per frame
     void Update()
     {
         tiempo = tiempo + Time.deltaTime;
-        posx = playerpos.transform.position.x;
-        posz = playerpos.transform.position.z;
-
-
-
-
-        
-            if (lives == 2)
-            {
-                vida3.SetActive(false);
-            }
-            if (lives == 1)
-            {
-                vida2.SetActive(false);
-            }
-            if (lives <= 0)
+        //activar ragdoll
+        if (actTimer==true)
+        {
+            timerRag -= Time.deltaTime;
+            if (timerRag <= 0.0f)
             {
                 lostgame.SetActive(true);
-
+                actTimer= false;
             }
-
-        
+        }
     }
 
 
@@ -65,11 +62,11 @@ public class Player : MonoBehaviour
     {
        if(other.tag == "trap")
        {
-            if (tocado == false) {
-               Hit();
-                loadLastPos();
+            if (tocado == false) {      
+                tocado = true;
+                Hit();
             }
-            tocado = true;
+            tocado = false;
         }
        else if (other.tag == "control")
         {
@@ -88,19 +85,38 @@ public class Player : MonoBehaviour
     public void Hit()
     {
         lives--;
-       
+
+        if (lives == 2)
+        {
+            vida3.SetActive(false);
+            die();
+            loadLastPos();
+        }
+        if (lives == 1)
+        {
+            vida2.SetActive(false);
+            die();
+            loadLastPos();
+        }
+        if (lives <= 0)
+        {
+            vida1.SetActive(false);
+            actTimer = true;
+            die();
+        }
     }
     public void setLastPos()
     {
+        posx = playerpos.transform.position.x;
+        posz = playerpos.transform.position.z;
         PlayerPrefs.SetFloat("posxSave", posx);
         PlayerPrefs.SetFloat("poszSave", posz);
     }
     public void loadLastPos()
     {
-        float x = PlayerPrefs.GetFloat("posxSave");
-        float z = PlayerPrefs.GetFloat("poszSave");
-        playerpos.transform.localPosition = new Vector3(x, 1f, z);
-        tocado = false;
+        //Debug.Log("loading pos"+ PlayerPrefs.GetFloat("posxSave")+" "+ PlayerPrefs.GetFloat("poszSave"));
+        playerpos.transform.position = new Vector3(PlayerPrefs.GetFloat("posxSave"), 0f, PlayerPrefs.GetFloat("poszSave"));
+        dient();
     }
     public void wingame()
     {
@@ -113,6 +129,33 @@ public class Player : MonoBehaviour
         PlayerPrefs.SetFloat("tiempoSave", tiempoTotal);
         PlayerPrefs.SetString("usuario", usuariocuadro.text);
     }
+    public void dient()
+    {
 
- 
+        GetComponent<Animator>().enabled = true;
+
+        setColliderState(false);
+        
+    }
+
+    //codigos ragdoll
+    public void die()
+    {
+        //Debug.Log("dying");
+        GetComponent<Animator>().enabled = false;
+
+        setColliderState(true);
+    }
+
+    void setColliderState(bool state)
+    {
+
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = state;
+        }
+        GetComponent<Collider>().enabled = !state;
+    }
 }

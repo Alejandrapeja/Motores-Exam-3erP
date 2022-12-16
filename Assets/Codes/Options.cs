@@ -1,24 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Options : MonoBehaviour
 {
+    public GameObject optionsScreen;
+
     public OptionsController settingsPanel;
     // Start is called before the first frame update
     void Start()
     {
-        settingsPanel = GameObject.FindGameObjectWithTag("options").GetComponent<OptionsController>();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void MostrarOpciones()
     {
-        settingsPanel.optionsScreen.SetActive(true);
+        optionsScreen.SetActive(true);
     }
+    public void ReloadMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
 }
