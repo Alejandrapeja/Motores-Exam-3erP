@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public int objetos;
     public float tiempoTotal;
     public bool tocado;
+    public float timerwin;
 
     public float timerRag;
     private bool actTimer;
@@ -134,7 +135,7 @@ public class Player : MonoBehaviour
 
         GetComponent<Animator>().enabled = true;
 
-        setColliderState(false);
+        setColliderState(true);
         
     }
 
