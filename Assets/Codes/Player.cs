@@ -19,7 +19,8 @@ public class Player : MonoBehaviour
     public float timerRag;
     private bool actTimer;
     private Animator anim;
-
+    public PlayerMovement playermove;
+    public Rigidbody[] RigidBodies;
 
     public GameObject playerpos;
     public GameObject lostgame;
@@ -27,7 +28,10 @@ public class Player : MonoBehaviour
     public GameObject victoria;
 
     //public CharacterController controller;
-
+    private void Awake()
+    {
+        RigidBodies = GetComponentsInChildren<Rigidbody>();
+    }
     void Start()
     {
         setColliderState(false); //ragdool
@@ -101,6 +105,7 @@ public class Player : MonoBehaviour
         }
         if (lives <= 0)
         {
+//            playermove.allowed= false;
             vida1.SetActive(false);
             actTimer = true;
             die();
@@ -132,10 +137,10 @@ public class Player : MonoBehaviour
     }
     public void dient()
     {
-
         GetComponent<Animator>().enabled = true;
-
-        setColliderState(true);
+        foreach (Rigidbody rb in RigidBodies)
+        { rb.isKinematic = true; }
+        setColliderState(false);
         
     }
 
@@ -144,7 +149,8 @@ public class Player : MonoBehaviour
     {
         //Debug.Log("dying");
         GetComponent<Animator>().enabled = false;
-
+        foreach (Rigidbody rb in RigidBodies)
+        { rb.isKinematic = false; }
         setColliderState(true);
     }
 
